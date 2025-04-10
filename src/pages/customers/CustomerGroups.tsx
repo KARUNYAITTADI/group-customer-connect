@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { 
@@ -44,7 +45,7 @@ export default function CustomerGroups() {
 
   // State
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterStatus, setFilterStatus] = useState<"active" | "inactive" | "all" | undefined>(undefined);
+  const [filterStatus, setFilterStatus] = useState<"active" | "inactive" | undefined>(undefined);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
   
