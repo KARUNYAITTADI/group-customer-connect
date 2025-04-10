@@ -51,7 +51,7 @@ const Sidebar = () => {
       </div>
 
       <nav className="space-y-1">
-        <SidebarLink href="/" icon={Home} active={path === "/"}>
+        <SidebarLink href="/dashboard" icon={Home} active={path === "/dashboard" || path === "/"}>
           Dashboard
         </SidebarLink>
         <SidebarLink
