@@ -8,11 +8,11 @@ import {
   Database,
   Home,
   Layers,
+  Megaphone,
   Phone,
   ScrollText,
   Settings,
   ShoppingCart,
-  User,
   Users,
 } from "lucide-react";
 
@@ -105,7 +105,7 @@ const Sidebar = () => {
         </SidebarLink>
         <SidebarLink
           href="/marketing"
-          icon={User}
+          icon={Megaphone}
           active={path.startsWith("/marketing")}
         >
           Marketing
