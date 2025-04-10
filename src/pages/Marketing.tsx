@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { 
@@ -53,7 +52,6 @@ import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 
-// Types for our marketing data
 interface Campaign {
   id: number;
   name: string;
@@ -82,9 +80,7 @@ interface Audience {
   created: string;
 }
 
-// Mock data fetching functions
 const fetchCampaigns = async (): Promise<Campaign[]> => {
-  // Simulate API call
   return [
     {
       id: 1,
@@ -145,7 +141,6 @@ const fetchCampaigns = async (): Promise<Campaign[]> => {
 };
 
 const fetchEmailTemplates = async (): Promise<EmailTemplate[]> => {
-  // Simulate API call
   return [
     {
       id: 1,
@@ -186,7 +181,6 @@ const fetchEmailTemplates = async (): Promise<EmailTemplate[]> => {
 };
 
 const fetchAudiences = async (): Promise<Audience[]> => {
-  // Simulate API call
   return [
     {
       id: 1,
@@ -226,7 +220,6 @@ const fetchAudiences = async (): Promise<Audience[]> => {
   ];
 };
 
-// Format dates for display
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
   return date.toLocaleDateString("en-US", {
@@ -236,7 +229,6 @@ const formatDate = (dateString: string) => {
   });
 };
 
-// Status badge component
 const StatusBadge = ({ status }: { status: Campaign["status"] }) => {
   const getStatusColor = () => {
     switch (status) {
@@ -260,7 +252,6 @@ const StatusBadge = ({ status }: { status: Campaign["status"] }) => {
   );
 };
 
-// Type badge component
 const TypeBadge = ({ type }: { type: Campaign["type"] }) => {
   const getTypeIcon = () => {
     switch (type) {
@@ -290,25 +281,21 @@ export default function Marketing() {
   const [selectedTab, setSelectedTab] = useState("campaigns");
   const { toast } = useToast();
   
-  // Fetch campaigns data
   const { data: campaigns = [], isLoading: campaignsLoading } = useQuery<Campaign[]>({
     queryKey: ["campaigns"],
     queryFn: fetchCampaigns,
   });
   
-  // Fetch email templates data
   const { data: templates = [], isLoading: templatesLoading } = useQuery<EmailTemplate[]>({
     queryKey: ["email-templates"],
     queryFn: fetchEmailTemplates,
   });
   
-  // Fetch audiences data
   const { data: audiences = [], isLoading: audiencesLoading } = useQuery<Audience[]>({
     queryKey: ["audiences"],
     queryFn: fetchAudiences,
   });
   
-  // Filter campaigns based on search query
   const filteredCampaigns = campaigns.filter(campaign =>
     campaign.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     campaign.status.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -316,20 +303,17 @@ export default function Marketing() {
     campaign.audience.toLowerCase().includes(searchQuery.toLowerCase())
   );
   
-  // Filter templates based on search query
   const filteredTemplates = templates.filter(template =>
     template.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     template.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
     template.category.toLowerCase().includes(searchQuery.toLowerCase())
   );
   
-  // Filter audiences based on search query
   const filteredAudiences = audiences.filter(audience =>
     audience.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     audience.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
   
-  // Action handlers
   const handleCreateCampaign = () => {
     toast({
       title: "Creating new campaign",
@@ -367,7 +351,7 @@ export default function Marketing() {
   };
 
   return (
-    <MainLayout>
+    <MainLayout title="Marketing">
       <div className="space-y-6 p-6">
         <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
           <div>
@@ -438,358 +422,6 @@ export default function Marketing() {
               Analytics
             </TabsTrigger>
           </TabsList>
-          
-          {/* Campaigns Tab Content */}
-          <TabsContent value="campaigns" className="space-y-4">
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle>Recent Campaigns</CardTitle>
-                <CardDescription>
-                  View and manage your marketing campaigns
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ScrollArea className="h-[calc(100vh-310px)]">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="w-[30px]">
-                          <Checkbox />
-                        </TableHead>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Type</TableHead>
-                        <TableHead>Audience</TableHead>
-                        <TableHead>Performance</TableHead>
-                        <TableHead>Date</TableHead>
-                        <TableHead className="w-[70px]">Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {campaignsLoading ? (
-                        <TableRow>
-                          <TableCell colSpan={8} className="text-center py-8">
-                            Loading campaigns...
-                          </TableCell>
-                        </TableRow>
-                      ) : filteredCampaigns.length === 0 ? (
-                        <TableRow>
-                          <TableCell colSpan={8} className="text-center py-8">
-                            No campaigns found. <Button variant="link" onClick={() => setSearchQuery("")}>Clear search</Button>
-                          </TableCell>
-                        </TableRow>
-                      ) : (
-                        filteredCampaigns.map((campaign) => (
-                          <TableRow key={campaign.id}>
-                            <TableCell>
-                              <Checkbox />
-                            </TableCell>
-                            <TableCell className="font-medium">{campaign.name}</TableCell>
-                            <TableCell>
-                              <StatusBadge status={campaign.status} />
-                            </TableCell>
-                            <TableCell>
-                              <TypeBadge type={campaign.type} />
-                            </TableCell>
-                            <TableCell>{campaign.audience}</TableCell>
-                            <TableCell>
-                              {campaign.status === "draft" || campaign.status === "scheduled" ? (
-                                <span className="text-muted-foreground">Not sent yet</span>
-                              ) : (
-                                <div className="text-xs">
-                                  <div className="flex justify-between">
-                                    <span>Sent:</span>
-                                    <span className="font-medium">{campaign.sent}</span>
-                                  </div>
-                                  <div className="flex justify-between">
-                                    <span>Opened:</span>
-                                    <span className="font-medium">
-                                      {campaign.opened} ({Math.round((campaign.opened / campaign.sent) * 100)}%)
-                                    </span>
-                                  </div>
-                                  <div className="flex justify-between">
-                                    <span>Clicked:</span>
-                                    <span className="font-medium">
-                                      {campaign.clicked} ({Math.round((campaign.clicked / campaign.sent) * 100)}%)
-                                    </span>
-                                  </div>
-                                </div>
-                              )}
-                            </TableCell>
-                            <TableCell>{formatDate(campaign.date)}</TableCell>
-                            <TableCell>
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <Button variant="ghost" size="icon">
-                                    <MoreHorizontal className="h-4 w-4" />
-                                    <span className="sr-only">Actions</span>
-                                  </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                  <DropdownMenuItem onClick={() => handleEdit(campaign.id, "campaign")}>
-                                    <PenSquare className="mr-2 h-4 w-4" />
-                                    Edit
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem onClick={() => handleDelete(campaign.id, "campaign")}>
-                                    <Trash className="mr-2 h-4 w-4" />
-                                    Delete
-                                  </DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                            </TableCell>
-                          </TableRow>
-                        ))
-                      )}
-                    </TableBody>
-                  </Table>
-                </ScrollArea>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          {/* Email Templates Tab Content */}
-          <TabsContent value="templates" className="space-y-4">
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle>Email Templates</CardTitle>
-                <CardDescription>
-                  Create and manage your email templates
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ScrollArea className="h-[calc(100vh-310px)]">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="w-[30px]">
-                          <Checkbox />
-                        </TableHead>
-                        <TableHead>Template Name</TableHead>
-                        <TableHead>Subject Line</TableHead>
-                        <TableHead>Category</TableHead>
-                        <TableHead>Last Modified</TableHead>
-                        <TableHead className="w-[70px]">Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {templatesLoading ? (
-                        <TableRow>
-                          <TableCell colSpan={6} className="text-center py-8">
-                            Loading templates...
-                          </TableCell>
-                        </TableRow>
-                      ) : filteredTemplates.length === 0 ? (
-                        <TableRow>
-                          <TableCell colSpan={6} className="text-center py-8">
-                            No templates found. <Button variant="link" onClick={() => setSearchQuery("")}>Clear search</Button>
-                          </TableCell>
-                        </TableRow>
-                      ) : (
-                        filteredTemplates.map((template) => (
-                          <TableRow key={template.id}>
-                            <TableCell>
-                              <Checkbox />
-                            </TableCell>
-                            <TableCell className="font-medium">{template.name}</TableCell>
-                            <TableCell>{template.subject}</TableCell>
-                            <TableCell>
-                              <Badge variant="outline" className="bg-blue-100 text-blue-800 hover:bg-blue-100">
-                                {template.category}
-                              </Badge>
-                            </TableCell>
-                            <TableCell>{formatDate(template.lastModified)}</TableCell>
-                            <TableCell>
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <Button variant="ghost" size="icon">
-                                    <MoreHorizontal className="h-4 w-4" />
-                                    <span className="sr-only">Actions</span>
-                                  </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                  <DropdownMenuItem onClick={() => handleEdit(template.id, "template")}>
-                                    <FileEdit className="mr-2 h-4 w-4" />
-                                    Edit
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem>
-                                    <MailPlus className="mr-2 h-4 w-4" />
-                                    Send Test
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem onClick={() => handleDelete(template.id, "template")}>
-                                    <Trash className="mr-2 h-4 w-4" />
-                                    Delete
-                                  </DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                            </TableCell>
-                          </TableRow>
-                        ))
-                      )}
-                    </TableBody>
-                  </Table>
-                </ScrollArea>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          {/* Audiences Tab Content */}
-          <TabsContent value="audiences" className="space-y-4">
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle>Audience Segments</CardTitle>
-                <CardDescription>
-                  Create and manage your customer audience segments
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ScrollArea className="h-[calc(100vh-310px)]">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Segment Name</TableHead>
-                        <TableHead>Contacts</TableHead>
-                        <TableHead>Description</TableHead>
-                        <TableHead>Created</TableHead>
-                        <TableHead className="w-[70px]">Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {audiencesLoading ? (
-                        <TableRow>
-                          <TableCell colSpan={5} className="text-center py-8">
-                            Loading audiences...
-                          </TableCell>
-                        </TableRow>
-                      ) : filteredAudiences.length === 0 ? (
-                        <TableRow>
-                          <TableCell colSpan={5} className="text-center py-8">
-                            No audience segments found. <Button variant="link" onClick={() => setSearchQuery("")}>Clear search</Button>
-                          </TableCell>
-                        </TableRow>
-                      ) : (
-                        filteredAudiences.map((audience) => (
-                          <TableRow key={audience.id}>
-                            <TableCell className="font-medium">{audience.name}</TableCell>
-                            <TableCell>
-                              <Badge>{audience.count.toLocaleString()}</Badge>
-                            </TableCell>
-                            <TableCell>{audience.description}</TableCell>
-                            <TableCell>{formatDate(audience.created)}</TableCell>
-                            <TableCell>
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <Button variant="ghost" size="icon">
-                                    <MoreHorizontal className="h-4 w-4" />
-                                    <span className="sr-only">Actions</span>
-                                  </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                  <DropdownMenuItem onClick={() => handleEdit(audience.id, "audience")}>
-                                    <PenSquare className="mr-2 h-4 w-4" />
-                                    Edit
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem>
-                                    <Users className="mr-2 h-4 w-4" />
-                                    View Contacts
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem onClick={() => handleDelete(audience.id, "audience")}>
-                                    <Trash className="mr-2 h-4 w-4" />
-                                    Delete
-                                  </DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                            </TableCell>
-                          </TableRow>
-                        ))
-                      )}
-                    </TableBody>
-                  </Table>
-                </ScrollArea>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          {/* Analytics Tab Content */}
-          <TabsContent value="analytics" className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Total Subscribers
-                  </CardTitle>
-                  <Users className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">4,250</div>
-                  <p className="text-xs text-muted-foreground">
-                    +12% from last month
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Open Rate
-                  </CardTitle>
-                  <Mail className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">24.8%</div>
-                  <p className="text-xs text-muted-foreground">
-                    +2.1% from last month
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Click Rate
-                  </CardTitle>
-                  <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">3.2%</div>
-                  <p className="text-xs text-muted-foreground">
-                    +0.5% from last month
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Active Campaigns
-                  </CardTitle>
-                  <Calendar className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">3</div>
-                  <p className="text-xs text-muted-foreground">
-                    +1 from last month
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-            
-            <Card className="col-span-4">
-              <CardHeader>
-                <CardTitle>Marketing Performance</CardTitle>
-                <CardDescription>
-                  View key performance metrics for your marketing activities
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="h-80 flex items-center justify-center">
-                <div className="text-center space-y-4">
-                  <Settings className="h-12 w-12 mx-auto text-muted-foreground" />
-                  <h3 className="text-lg font-medium">Analytics Dashboard</h3>
-                  <p className="text-sm text-muted-foreground max-w-md">
-                    This section would display charts and metrics for campaign performance, 
-                    email analytics, customer behavior, and ROI measurements.
-                  </p>
-                  <Button className="bg-purple-600 hover:bg-purple-700">View Full Analytics</Button>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
         </Tabs>
       </div>
     </MainLayout>
