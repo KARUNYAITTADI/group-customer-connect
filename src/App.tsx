@@ -13,6 +13,9 @@ import POS from "./pages/POS";
 import Orders from "./pages/Orders";
 import Reservations from "./pages/Reservations";
 import Catalog from "./pages/Catalog";
+import Inventory from "./pages/Inventory";
+import PurchaseOrder from "./pages/PurchaseOrder";
+import BusinessSettings from "./pages/BusinessSettings";
 import Analytics from "./pages/Analytics";
 
 const queryClient = new QueryClient();
@@ -30,9 +33,12 @@ const App = () => (
           <Route path="/orders" element={<Orders />} />
           <Route path="/reservations" element={<Reservations />} />
           <Route path="/catalog" element={<Catalog />} />
+          <Route path="/inventory" element={<Inventory />} />
+          <Route path="/purchase" element={<PurchaseOrder />} />
           <Route path="/customers" element={<Customers />} />
           <Route path="/customer-groups" element={<CustomerGroups />} />
           <Route path="/analytics" element={<Analytics />} />
+          <Route path="/business-settings" element={<BusinessSettings />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
