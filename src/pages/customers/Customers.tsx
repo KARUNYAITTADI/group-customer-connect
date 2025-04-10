@@ -337,14 +337,14 @@ export default function Customers() {
                 <div className="flex items-center gap-2">
                   <span className="text-sm whitespace-nowrap">Filter by Group</span>
                   <Select
-                    value={filterGroupId || ""}
-                    onValueChange={(value) => setFilterGroupId(value || undefined)}
+                    value={filterGroupId || "all"}
+                    onValueChange={(value) => setFilterGroupId(value === "all" ? undefined : value)}
                   >
                     <SelectTrigger className="w-[180px]">
                       <SelectValue placeholder="All Groups" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All Groups</SelectItem>
+                      <SelectItem value="all">All Groups</SelectItem>
                       {groupsData?.data.items.map((group) => (
                         <SelectItem key={group.id} value={group.id}>
                           {group.customerGroupName}

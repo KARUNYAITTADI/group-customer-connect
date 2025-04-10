@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { 
@@ -45,7 +44,7 @@ export default function CustomerGroups() {
 
   // State
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterStatus, setFilterStatus] = useState<"active" | "inactive" | undefined>(undefined);
+  const [filterStatus, setFilterStatus] = useState<"active" | "inactive" | "all" | undefined>(undefined);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
   
@@ -272,14 +271,14 @@ export default function CustomerGroups() {
                 <div className="flex items-center gap-2">
                   <span className="text-sm whitespace-nowrap">Filter by Status</span>
                   <Select
-                    value={filterStatus || ""}
-                    onValueChange={(value) => setFilterStatus(value as "active" | "inactive" | undefined)}
+                    value={filterStatus || "all"}
+                    onValueChange={(value) => setFilterStatus(value === "all" ? undefined : value as "active" | "inactive")}
                   >
                     <SelectTrigger className="w-[180px]">
                       <SelectValue placeholder="All Status" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All Status</SelectItem>
+                      <SelectItem value="all">All Status</SelectItem>
                       <SelectItem value="active">Active</SelectItem>
                       <SelectItem value="inactive">Inactive</SelectItem>
                     </SelectContent>
