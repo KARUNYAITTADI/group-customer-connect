@@ -422,6 +422,325 @@ export default function Marketing() {
               Analytics
             </TabsTrigger>
           </TabsList>
+          
+          <TabsContent value="campaigns" className="space-y-4">
+            <Card>
+              <CardContent className="p-0">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[30px]"></TableHead>
+                      <TableHead>Campaign Name</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Type</TableHead>
+                      <TableHead>Audience</TableHead>
+                      <TableHead className="text-right">Sent</TableHead>
+                      <TableHead className="text-right">Opened</TableHead>
+                      <TableHead className="text-right">Clicked</TableHead>
+                      <TableHead>Date</TableHead>
+                      <TableHead className="w-[50px]"></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {campaignsLoading ? (
+                      <TableRow>
+                        <TableCell colSpan={10} className="text-center py-8">
+                          Loading campaigns...
+                        </TableCell>
+                      </TableRow>
+                    ) : filteredCampaigns.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={10} className="text-center py-8">
+                          No campaigns found. Try adjusting your search.
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      filteredCampaigns.map((campaign) => (
+                        <TableRow key={campaign.id}>
+                          <TableCell>
+                            <Checkbox />
+                          </TableCell>
+                          <TableCell className="font-medium">{campaign.name}</TableCell>
+                          <TableCell>
+                            <StatusBadge status={campaign.status} />
+                          </TableCell>
+                          <TableCell>
+                            <TypeBadge type={campaign.type} />
+                          </TableCell>
+                          <TableCell>{campaign.audience}</TableCell>
+                          <TableCell className="text-right">{campaign.sent.toLocaleString()}</TableCell>
+                          <TableCell className="text-right">{campaign.opened.toLocaleString()}</TableCell>
+                          <TableCell className="text-right">{campaign.clicked.toLocaleString()}</TableCell>
+                          <TableCell>{formatDate(campaign.date)}</TableCell>
+                          <TableCell>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon">
+                                  <MoreHorizontal className="h-4 w-4" />
+                                  <span className="sr-only">Actions</span>
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => handleEdit(campaign.id, "campaign")}>
+                                  <FileEdit className="mr-2 h-4 w-4" />
+                                  Edit
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleDelete(campaign.id, "campaign")}>
+                                  <Trash className="mr-2 h-4 w-4" />
+                                  Delete
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="templates" className="space-y-4">
+            <Card>
+              <CardContent className="p-0">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[30px]"></TableHead>
+                      <TableHead>Template Name</TableHead>
+                      <TableHead>Subject</TableHead>
+                      <TableHead>Category</TableHead>
+                      <TableHead>Last Modified</TableHead>
+                      <TableHead className="w-[50px]"></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {templatesLoading ? (
+                      <TableRow>
+                        <TableCell colSpan={6} className="text-center py-8">
+                          Loading templates...
+                        </TableCell>
+                      </TableRow>
+                    ) : filteredTemplates.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={6} className="text-center py-8">
+                          No templates found. Try adjusting your search.
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      filteredTemplates.map((template) => (
+                        <TableRow key={template.id}>
+                          <TableCell>
+                            <Checkbox />
+                          </TableCell>
+                          <TableCell className="font-medium">{template.name}</TableCell>
+                          <TableCell>{template.subject}</TableCell>
+                          <TableCell>
+                            <Badge variant="outline" className="bg-blue-100 text-blue-800">
+                              {template.category}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>{formatDate(template.lastModified)}</TableCell>
+                          <TableCell>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon">
+                                  <MoreHorizontal className="h-4 w-4" />
+                                  <span className="sr-only">Actions</span>
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => handleEdit(template.id, "template")}>
+                                  <FileEdit className="mr-2 h-4 w-4" />
+                                  Edit
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleDelete(template.id, "template")}>
+                                  <Trash className="mr-2 h-4 w-4" />
+                                  Delete
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="audiences" className="space-y-4">
+            <Card>
+              <CardContent className="p-0">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[30px]"></TableHead>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Description</TableHead>
+                      <TableHead className="text-right">Count</TableHead>
+                      <TableHead>Created</TableHead>
+                      <TableHead className="w-[50px]"></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {audiencesLoading ? (
+                      <TableRow>
+                        <TableCell colSpan={6} className="text-center py-8">
+                          Loading audiences...
+                        </TableCell>
+                      </TableRow>
+                    ) : filteredAudiences.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={6} className="text-center py-8">
+                          No audiences found. Try adjusting your search.
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      filteredAudiences.map((audience) => (
+                        <TableRow key={audience.id}>
+                          <TableCell>
+                            <Checkbox />
+                          </TableCell>
+                          <TableCell className="font-medium">{audience.name}</TableCell>
+                          <TableCell>{audience.description}</TableCell>
+                          <TableCell className="text-right">{audience.count.toLocaleString()}</TableCell>
+                          <TableCell>{formatDate(audience.created)}</TableCell>
+                          <TableCell>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon">
+                                  <MoreHorizontal className="h-4 w-4" />
+                                  <span className="sr-only">Actions</span>
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => handleEdit(audience.id, "audience")}>
+                                  <FileEdit className="mr-2 h-4 w-4" />
+                                  Edit
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleDelete(audience.id, "audience")}>
+                                  <Trash className="mr-2 h-4 w-4" />
+                                  Delete
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="analytics" className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-lg">Email Performance</CardTitle>
+                  <CardDescription>Overall campaign performance metrics</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium">Open Rate</span>
+                      <span className="text-sm font-bold">42.5%</span>
+                    </div>
+                    <div className="h-2 bg-gray-100 rounded-full">
+                      <div className="h-full bg-purple-500 rounded-full" style={{ width: "42.5%" }}></div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium">Click Rate</span>
+                      <span className="text-sm font-bold">18.3%</span>
+                    </div>
+                    <div className="h-2 bg-gray-100 rounded-full">
+                      <div className="h-full bg-purple-500 rounded-full" style={{ width: "18.3%" }}></div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium">Conversion Rate</span>
+                      <span className="text-sm font-bold">5.7%</span>
+                    </div>
+                    <div className="h-2 bg-gray-100 rounded-full">
+                      <div className="h-full bg-purple-500 rounded-full" style={{ width: "5.7%" }}></div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-lg">Audience Growth</CardTitle>
+                  <CardDescription>Subscriber trends over time</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">Total Subscribers</span>
+                      <span className="font-bold">8,542</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">New This Month</span>
+                      <span className="font-bold text-green-600">+248</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">Unsubscribed</span>
+                      <span className="font-bold text-red-600">-32</span>
+                    </div>
+                    <div className="h-32 bg-gray-50 rounded-md flex items-end justify-between p-2 mt-2">
+                      <div className="w-8 bg-purple-200 rounded-t h-40%"></div>
+                      <div className="w-8 bg-purple-300 rounded-t h-50%"></div>
+                      <div className="w-8 bg-purple-400 rounded-t h-60%"></div>
+                      <div className="w-8 bg-purple-500 rounded-t h-45%"></div>
+                      <div className="w-8 bg-purple-600 rounded-t h-70%"></div>
+                      <div className="w-8 bg-purple-700 rounded-t h-80%"></div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-lg">Popular Content</CardTitle>
+                  <CardDescription>Most engaging email content</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2">
+                      <div className="bg-purple-100 text-purple-800 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">1</div>
+                      <div>
+                        <p className="text-sm font-medium">Summer Sale Promotion</p>
+                        <p className="text-xs text-muted-foreground">24.5% CTR</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="bg-purple-100 text-purple-800 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">2</div>
+                      <div>
+                        <p className="text-sm font-medium">New Product Launch</p>
+                        <p className="text-xs text-muted-foreground">18.7% CTR</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="bg-purple-100 text-purple-800 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">3</div>
+                      <div>
+                        <p className="text-sm font-medium">Customer Feedback Survey</p>
+                        <p className="text-xs text-muted-foreground">12.3% CTR</p>
+                      </div>
+                    </div>
+                    <Button variant="outline" className="w-full mt-2">
+                      <BarChart className="h-4 w-4 mr-2" />
+                      View Full Report
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
         </Tabs>
       </div>
     </MainLayout>
