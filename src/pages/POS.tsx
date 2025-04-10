@@ -14,7 +14,15 @@ const categories = [
   "All", "Food", "Beverages", "Snacks", "Desserts", "Merchandise"
 ];
 
-const products = [
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  category: string;
+  image: string;
+}
+
+const products: Product[] = [
   { id: 1, name: "Espresso", price: 3.50, category: "Beverages", image: "/placeholder.svg" },
   { id: 2, name: "Cappuccino", price: 4.50, category: "Beverages", image: "/placeholder.svg" },
   { id: 3, name: "Latte", price: 4.75, category: "Beverages", image: "/placeholder.svg" },
@@ -28,10 +36,7 @@ const products = [
 ];
 
 // Cart item type
-interface CartItem {
-  id: number;
-  name: string;
-  price: number;
+interface CartItem extends Product {
   quantity: number;
 }
 
@@ -40,7 +45,7 @@ const POS = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [cart, setCart] = useState<CartItem[]>([]);
 
-  const addToCart = (product: typeof products[0]) => {
+  const addToCart = (product: Product) => {
     setCart(prevCart => {
       const existingItem = prevCart.find(item => item.id === product.id);
       if (existingItem) {

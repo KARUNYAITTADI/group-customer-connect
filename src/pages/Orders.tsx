@@ -35,6 +35,16 @@ const statusColorMap: Record<string, string> = {
   cancelled: "bg-red-500",
 };
 
+// Define the Order type
+interface Order {
+  id: string;
+  customer: string;
+  date: string;
+  total: number;
+  status: string;
+  items: number;
+}
+
 const Orders = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -44,11 +54,11 @@ const Orders = () => {
   const [orderDirection, setOrderDirection] = useState("desc");
 
   // Simulating data fetching with React Query
-  const { data: orders, isLoading, isError } = useQuery({
+  const { data: orders, isLoading, isError } = useQuery<Order[]>({
     queryKey: ["orders"],
     queryFn: () => {
       // In a real app, this would be an API call
-      return new Promise((resolve) => {
+      return new Promise<Order[]>((resolve) => {
         setTimeout(() => resolve(mockOrders), 500);
       });
     },

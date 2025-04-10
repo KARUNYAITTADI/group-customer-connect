@@ -36,6 +36,17 @@ const statusColorMap: Record<string, string> = {
   cancelled: "bg-red-500",
 };
 
+// Define the Reservation type
+interface Reservation {
+  id: string;
+  customer: string;
+  date: string;
+  time: string;
+  guests: number;
+  status: string;
+  phone: string;
+}
+
 const Reservations = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [searchTerm, setSearchTerm] = useState("");
@@ -44,11 +55,11 @@ const Reservations = () => {
   const [itemsPerPage] = useState(6);
 
   // Simulating data fetching with React Query
-  const { data: reservations, isLoading, isError } = useQuery({
+  const { data: reservations, isLoading, isError } = useQuery<Reservation[]>({
     queryKey: ["reservations"],
     queryFn: () => {
       // In a real app, this would be an API call
-      return new Promise((resolve) => {
+      return new Promise<Reservation[]>((resolve) => {
         setTimeout(() => resolve(mockReservations), 500);
       });
     },

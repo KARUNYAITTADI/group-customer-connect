@@ -32,6 +32,17 @@ const categories = [
   "All", "Beverages", "Food", "Snacks", "Desserts", "Merchandise"
 ];
 
+// Define the Product type
+interface Product {
+  id: number;
+  name: string;
+  category: string;
+  price: number;
+  status: string;
+  sku: string;
+  image: string;
+}
+
 const Catalog = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
@@ -42,11 +53,11 @@ const Catalog = () => {
   const [sortBy, setSortBy] = useState("name");
 
   // Simulating data fetching with React Query
-  const { data: products, isLoading, isError } = useQuery({
+  const { data: products, isLoading, isError } = useQuery<Product[]>({
     queryKey: ["products"],
     queryFn: () => {
       // In a real app, this would be an API call
-      return new Promise((resolve) => {
+      return new Promise<Product[]>((resolve) => {
         setTimeout(() => resolve(mockProducts), 500);
       });
     },
