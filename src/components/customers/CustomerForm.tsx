@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import { Customer, CustomerGroup } from "@/types";
+import { Customer, CustomerGroup, CustomerRequestDTO, Gender } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -61,7 +61,7 @@ type FormValues = z.infer<typeof formSchema>;
 interface CustomerFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (values: FormValues) => void;
+  onSubmit: (values: CustomerRequestDTO) => void;
   initialData?: Customer;
   mode: "create" | "edit";
   customerGroups: CustomerGroup[];
@@ -120,7 +120,25 @@ export function CustomerForm({
   }, [initialData, form]);
 
   const handleSubmit = (values: FormValues) => {
-    onSubmit(values);
+    // Ensure all required fields for CustomerRequestDTO are present
+    const customerRequest: CustomerRequestDTO = {
+      firstName: values.firstName,
+      lastName: values.lastName,
+      phoneNumber: values.phoneNumber,
+      emailAddress: values.emailAddress,
+      gender: values.gender as Gender,
+      dateOfBirth: values.dateOfBirth?.toISOString(),
+      anniversaryDate: values.anniversaryDate?.toISOString(),
+      address: values.address,
+      companyName: values.companyName,
+      companyAddress: values.companyAddress,
+      gstNumber: values.gstNumber,
+      taxStateCode: values.taxStateCode,
+      amountDue: values.amountDue,
+      customerGroupId: values.customerGroupId,
+    };
+    
+    onSubmit(customerRequest);
   };
 
   return (
