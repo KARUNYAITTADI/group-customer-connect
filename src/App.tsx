@@ -18,6 +18,8 @@ import PurchaseOrder from "./pages/PurchaseOrder";
 import BusinessSettings from "./pages/BusinessSettings";
 import Analytics from "./pages/Analytics";
 import Marketing from "./pages/Marketing";
+import StaffManagement from "./pages/resources/StaffManagement";
+import RolesPermissions from "./pages/resources/RolesPermissions";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +42,8 @@ const App = () => (
           <Route path="/customer-groups" element={<CustomerGroups />} />
           <Route path="/marketing" element={<Marketing />} />
           <Route path="/analytics" element={<Analytics />} />
+          <Route path="/resources/staff" element={<StaffManagement />} />
+          <Route path="/resources/roles" element={<RolesPermissions />} />
           <Route path="/business-settings" element={<BusinessSettings />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

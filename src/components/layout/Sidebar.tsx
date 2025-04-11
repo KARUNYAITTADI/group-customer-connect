@@ -14,7 +14,11 @@ import {
   Settings,
   ShoppingCart,
   Users,
+  Shield,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
+import { useState } from "react";
 
 interface SidebarLinkProps {
   href: string;
@@ -40,9 +44,51 @@ const SidebarLink = ({ href, icon: Icon, children, active }: SidebarLinkProps) =
   );
 };
 
+interface SidebarSubmenuProps {
+  title: string;
+  icon: React.FC<{ className?: string }>;
+  children: React.ReactNode;
+  active?: boolean;
+}
+
+const SidebarSubmenu = ({ title, icon: Icon, children, active }: SidebarSubmenuProps) => {
+  const [isOpen, setIsOpen] = useState(active);
+  
+  return (
+    <div className="space-y-1">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className={cn(
+          "w-full flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium transition-colors",
+          active
+            ? "bg-amber-400 text-black"
+            : "text-gray-700 hover:bg-muted"
+        )}
+      >
+        <div className="flex items-center space-x-3">
+          <Icon className="h-5 w-5" />
+          <span>{title}</span>
+        </div>
+        {isOpen ? (
+          <ChevronUp className="h-4 w-4" />
+        ) : (
+          <ChevronDown className="h-4 w-4" />
+        )}
+      </button>
+      {isOpen && (
+        <div className="pl-8 space-y-1">
+          {children}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const Sidebar = () => {
   const location = useLocation();
   const path = location.pathname;
+
+  const isResourcesActive = path.startsWith("/resources");
 
   return (
     <div className="w-56 min-h-screen border-r p-4 bg-white flex flex-col">
@@ -117,6 +163,36 @@ const Sidebar = () => {
         >
           Analytics & Report
         </SidebarLink>
+        
+        <SidebarSubmenu 
+          title="Manage Resources" 
+          icon={Shield} 
+          active={isResourcesActive}
+        >
+          <Link
+            to="/resources/staff"
+            className={cn(
+              "flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors",
+              path === "/resources/staff"
+                ? "bg-amber-400 text-black"
+                : "text-gray-700 hover:bg-muted"
+            )}
+          >
+            <span>Staff Listing</span>
+          </Link>
+          <Link
+            to="/resources/roles"
+            className={cn(
+              "flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors",
+              path === "/resources/roles"
+                ? "bg-amber-400 text-black"
+                : "text-gray-700 hover:bg-muted"
+            )}
+          >
+            <span>Roles & Permissions</span>
+          </Link>
+        </SidebarSubmenu>
+        
         <SidebarLink
           href="/business-settings"
           icon={Settings}
